@@ -1,4 +1,9 @@
 import tkinter as tk
+import prueba
+#---Username
+#---boton iniciar
+#---record 
+#---ventana de ganaste
 
 class Vista:
     Ancho = 600
@@ -52,6 +57,7 @@ class Vista:
     def obtener_letra(self):
         letra = self.entrada_texto.get().upper()
         if letra: # Solo imprime si no está vacío
+
             #-----------------simulacion error-------------
             self.errores_prueba += 1
             self.dibujar_persona(self.errores_prueba)
@@ -63,6 +69,7 @@ class Vista:
                 self.btn_enviar.config(state=tk.DISABLED)  # Deshabilita el botón
                 self.entrada_texto.config(state=tk.DISABLED)  # Deshabilita el cuadro de texto
             #-----------------------------------------------
+
             print(f"Letra ingresada: {letra}")
         self.entrada_texto.delete(0, tk.END)
 
@@ -76,7 +83,7 @@ class Vista:
         # Soga
         self.canvas.create_line(250, 50, 250, 100, width=5, fill="#636363")
 
-    def dibujar_persona(self , errores):
+    def dibujar_persona(self , errores): #-------------------Reeamplazar----------------------
         if errores >= 1:  # Cabeza
             self.canvas.create_oval(230, 100, 270, 140, width=3, outline="#333333", fill="#f0c9c9")
         if errores >= 2:  # Cuerpo
@@ -89,7 +96,7 @@ class Vista:
             self.canvas.create_line(250, 220, 220, 250, width=3, fill="#333333")
         if errores >= 6:  # Pierna derecha
             self.canvas.create_line(250, 220, 280, 250, width=3, fill="#333333")
-
+    #----------------------------------------------------------------------------------------
     def iniciar(self):
         self.root.mainloop()
 
