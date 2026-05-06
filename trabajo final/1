@@ -2,13 +2,14 @@ import tkinter as tk
 
 class Vista:
     Ancho = 600
-    Alto = 600  # Aumenté un poco el alto total
+    Alto = 650  
 
     def __init__(self):
+        self.errores_prueba = 0 #------------- Variable para probar el dibujo de la persona ---------
         self.root = tk.Tk()
         self.root.title("Ahorcado")
         self.root.geometry(f"{self.Ancho}x{self.Alto}")
-        self.root.config(bg="#e7dbdb", relief="ridge", bd=10)
+        self.root.config(bg="#ffffff", relief="ridge", bd=10)
 
         # 1. Canvas (Reducimos su altura para que quepa lo demás abajo)
         self.canvas = tk.Canvas(self.root, width=self.Ancho, 
@@ -17,30 +18,51 @@ class Vista:
         self.canvas.pack()
         self.dibujar_soporte()
 
-        # 2. Frame de Entrada (Ajustado el color y padding)
-        self.frame_entrada = tk.Frame(self.root, bg="#e70404", padx=10, pady=10)
-        self.frame_entrada.pack(pady=20)
+        # Lineas para la palabra
+        self.label_palabra = tk.Label(self.root, text="_ _ _ _", font=("courier", 24, "bold"), bg="#ffffff"
+                                        , fg="#333333").pack(pady=20)
 
-        # Etiqueta
+        # 2. Frame de Entrada (Ajustado el color y padding)
+        self.frame_entrada = tk.Frame(self.root, bg="#4004e7", padx=10, pady=10)
+        self.frame_entrada.pack(pady=10)
+
+        # Etiqueta del cuadro de texto
         self.label_instruccion = tk.Label(self.frame_entrada, text="Ingresa una letra:", 
-                                         font=("Arial", 14), bg="#e70404", fg="white")
+                                         font=("Arial", 14), bg="#4004e7", fg="white")
         self.label_instruccion.pack(side=tk.LEFT, padx=5)                     
 
         # Cuadro de texto
         self.entrada_texto = tk.Entry(self.frame_entrada, font=("Arial", 14), 
                                       width=5, justify="center")
+        self.entrada_texto.bind("<Return>", lambda event: self.obtener_letra())  # Permite presionar Enter
         self.entrada_texto.pack(side=tk.LEFT, padx=5)
         self.entrada_texto.focus_set()
 
-        # Botón
+        # Botón adivinar
         self.btn_enviar = tk.Button(self.frame_entrada, text="Adivinar", 
                                     command=self.obtener_letra, font=("Arial", 12),
                                     bg="#f0f0f0", cursor="hand2")
         self.btn_enviar.pack(side=tk.LEFT, padx=5)
 
+        # Boton para salir
+        self.btn_salir = tk.Button(self.root, text="Salir", command=self.root.quit, 
+                                   font=("Arial", 12), bg="#a5a5a5", padx=20, pady=5, cursor="hand2")
+        self.btn_salir.pack(pady=20)
+
     def obtener_letra(self):
         letra = self.entrada_texto.get().upper()
         if letra: # Solo imprime si no está vacío
+            #-----------------simulacion error-------------
+            self.errores_prueba += 1
+            self.dibujar_persona(self.errores_prueba)
+
+            print(f"Error #{self.errores_prueba}: Se dibujo una pate")
+            
+            if self.errores_prueba >= 6:
+                print("¡Juego terminado! Has perdido.")
+                self.btn_enviar.config(state=tk.DISABLED)  # Deshabilita el botón
+                self.entrada_texto.config(state=tk.DISABLED)  # Deshabilita el cuadro de texto
+            #-----------------------------------------------
             print(f"Letra ingresada: {letra}")
         self.entrada_texto.delete(0, tk.END)
 
@@ -53,6 +75,20 @@ class Vista:
         self.canvas.create_line(98, 50, 253, 50, width=5, fill="#70492E")
         # Soga
         self.canvas.create_line(250, 50, 250, 100, width=5, fill="#636363")
+
+    def dibujar_persona(self , errores):
+        if errores >= 1:  # Cabeza
+            self.canvas.create_oval(230, 100, 270, 140, width=3, outline="#333333", fill="#f0c9c9")
+        if errores >= 2:  # Cuerpo
+            self.canvas.create_line(250, 140, 250, 220, width=3, fill="#333333")
+        if errores >= 3:  # Brazo izquierdo
+            self.canvas.create_line(250, 160, 220, 190, width=3, fill="#333333")
+        if errores >= 4:  # Brazo derecho
+            self.canvas.create_line(250, 160, 280, 190, width=3, fill="#333333")
+        if errores >= 5:  # Pierna izquierda
+            self.canvas.create_line(250, 220, 220, 250, width=3, fill="#333333")
+        if errores >= 6:  # Pierna derecha
+            self.canvas.create_line(250, 220, 280, 250, width=3, fill="#333333")
 
     def iniciar(self):
         self.root.mainloop()
