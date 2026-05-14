@@ -1,12 +1,9 @@
 import tkinter as tk
-from tkinter import messagebox
-
-#---Username
-#---record 
+from tkinter import messagebox 
 
 class Vista:
     Ancho = 600
-    Alto = 650  
+    Alto = 700  
 
     def __init__(self):
     
@@ -15,8 +12,9 @@ class Vista:
         self.root.geometry(f"{self.Ancho}x{self.Alto}")
         self.root.config(bg="#ffffff", relief="ridge", bd=10)
 
-        self.lebel_score = tk.lebel(self.root, text=f"Puntaje: 0", front=("courier", 12))
-        self.lebel_score.pack(pady=10)
+        self.label_score = tk.Label(self.root, text=f"Puntaje: 0", font=("courier", 12))
+
+        self.label_score.pack(pady=10)
 
         # 1. Canvas (Reducimos su altura para que quepa lo demás abajo)
         self.canvas = tk.Canvas(self.root, width=self.Ancho, 
@@ -41,13 +39,12 @@ class Vista:
         # Cuadro de texto
         self.entrada_texto = tk.Entry(self.frame_entrada, font=("Arial", 14), 
                                       width=5, justify="center")
-        self.entrada_texto.bind("<Return>", lambda event: self.obtener_letra())  # Permite presionar Enter
+        self.entrada_texto.bind("<Return>")  # Permite presionar Enter
         self.entrada_texto.pack(side=tk.LEFT, padx=5)
         self.entrada_texto.focus_set()
 
         # Botón adivinar
-        self.btn_enviar = tk.Button(self.frame_entrada, text="Adivinar", 
-                                    command=self.obtener_letra, font=("Arial", 12),
+        self.btn_enviar = tk.Button(self.frame_entrada, text="Adivinar", font=("Arial", 12),
                                     bg="#f0f0f0", cursor="hand2")
         self.btn_enviar.pack(side=tk.LEFT, padx=5)
 
@@ -56,16 +53,9 @@ class Vista:
                                    font=("Arial", 12), bg="#a5a5a5", padx=20, pady=5, cursor="hand2")
         self.btn_salir.pack(pady=20)
 
-    def obtener_letra(self):
-        letra = self.entrada_texto.get().upper()
-        if letra: # Solo imprime si no está vacío
-
-            print(f"Letra ingresada: {letra}")
-        self.entrada_texto.delete(0, tk.END)
-
     def dibujar_soporte(self):
         # Base
-        self.canvas.create_line(50, 380, 150, 380, width=5, fill="#70492E")
+        self.canvas.create_line(50, 380, 150, 380, width=10, fill="#70492E")
         # Poste
         self.canvas.create_line(100, 380, 100, 50, width=5, fill="#70492E")
         # Viga
@@ -76,7 +66,7 @@ class Vista:
     def mostrar_progreso(self, texto):
         self.label_palabra.config(text=texto)
     
-    def dibujar_persona(self , errores): #-------------------Reeamplazar----------------------
+    def dibujar_persona(self , errores): 
         if errores >= 1:  # Cabeza
             self.canvas.create_oval(230, 100, 270, 140, width=3, outline="#333333", fill="#f0c9c9")
         if errores >= 2:  # Cuerpo
@@ -89,7 +79,6 @@ class Vista:
             self.canvas.create_line(250, 220, 220, 250, width=3, fill="#333333")
         if errores >= 6:  # Pierna derecha
             self.canvas.create_line(250, 220, 280, 250, width=3, fill="#333333")
-    #----------------------------------------------------------------------------------------
     
     def limpiar_pantalla(self):
         self.canvas.delete("all")
@@ -105,6 +94,9 @@ class Vista:
     def reinicio(self, titulo, mensaje):
         respuesta = messagebox.askyesno(titulo, mensaje + "\n¿Quieres jugar de nuevo?")
         return respuesta
+    
+    def actualizar_puntaje(self, puntaje):
+        self.label_score.config(text=f"Puntaje: {puntaje}")
     
     def iniciar(self):
         self.root.mainloop()
