@@ -47,6 +47,13 @@ def display_hint(hint):
 def display_answer(answer):
     print(" ".join(answer))
 
+def verificar_estado(hint, wrong_guesses, max_errores=6):
+    if "_" not in hint:
+        return "WIN"
+    elif wrong_guesses >= max_errores:
+        return "LOSE"
+    return None
+
 def main():
     answer = random.choice(words)
     hint = ["_"] * len(answer)
@@ -76,16 +83,16 @@ def main():
         else:
             wrong_guesses += 1
 
-       # if "_" not in hint:
-        #    display_man(wrong_guesses)
-         #   display_answer(answer)
-          #  print("YOU WIN!")
-           # is_running = False
-        #elif wrong_guesses >= len(hangman_art) - 1:
-         #   display_man(wrong_guesses)
-          #  display_answer(answer)
-           # print("YOU LOSE!")
-            #is_running = False
+        if "_" not in hint:
+            display_man(wrong_guesses)
+            display_answer(answer)
+            print("YOU WIN!")
+            is_running = False
+        elif wrong_guesses >= len(hangman_art) - 1:
+            display_man(wrong_guesses)
+            display_answer(answer)
+            print("YOU LOSE!")
+            is_running = False
 
 if __name__ == "__main__":
     main()
